@@ -1,0 +1,19 @@
+BEFORE UPDATE Trigger
+------------------------
+CREATE TRIGGER updating_record
+BEFORE UPDATE ON clientmstr
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_trade (client_id, action_type, old_name, old_address, action_time)
+    VALUES (OLD.client_id, 'UPDATE', OLD.name, OLD.address, NOW());
+END;
+
+BEFORE DELETE Trigger
+-----------------------------
+CREATE TRIGGER deleting_record
+BEFORE DELETE ON clientmstr
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_trade (client_id, action_type, old_name, old_address, action_time)
+    VALUES (OLD.client_id, 'DELETE', OLD.name, OLD.address, NOW());
+END;

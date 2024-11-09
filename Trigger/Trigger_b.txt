@@ -1,0 +1,32 @@
+
+CREATE TRIGGER before_insert_emp
+BEFORE INSERT ON Emp
+FOR EACH ROW
+BEGIN
+    -- Check if the new salary is less than 50,000
+    IF NEW.salary < 50000 THEN
+        -- Log the rejected insert attempt in Tracking
+        INSERT INTO Tracking (e_no, salary)
+        VALUES (NEW.e_no, NEW.salary);
+        
+        -- Reject the insert and show an error message
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Error: Salary must be at least Rs. 50,000 for new employees.';
+    END IF;
+END;
+--------------------------------------------------------
+CREATE TRIGGER before_update_emp
+BEFORE UPDATE ON Emp
+FOR EACH ROW
+BEGIN
+    -- Check if the updated salary is less than 50,000
+    IF NEW.salary < 50000 THEN
+        -- Log the rejected update attempt in Tracking
+        INSERT INTO Tracking (e_no, salary)
+        VALUES (NEW.e_no, NEW.salary);
+        
+        -- Reject the update and show an error message
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Error: Salary must be at least Rs. 50,000 for employee updates.';
+    END IF;
+END;

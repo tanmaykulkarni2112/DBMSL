@@ -1,0 +1,35 @@
+db1> db.d.aggregate([{$group : {_id : null, money : {$sum : "$money"}}}]);
+[ { _id: null, money: 2312664 } ]
+db1> db.d.updateOne({money : 231},{$set: {money : 999}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+db1> db.d.find();
+[
+  { _id: ObjectId('673251ade2cebf7a110d819a'), money: 120 },
+  { _id: ObjectId('673251ade2cebf7a110d819b'), money: 999 },
+  { _id: ObjectId('673251ade2cebf7a110d819c'), money: 2312313 }
+]
+db1> db.d.find({$or : [{money : 120}, {money : 999]});
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:45)
+
+> 1 | db.d.find({$or : [{money : 120}, {money : 999]});
+    |                                              ^
+  2 |
+
+db1> db.d.find({$or : [{money : 120}, {money : 999}]});
+[
+  { _id: ObjectId('673251ade2cebf7a110d819a'), money: 120 },
+  { _id: ObjectId('673251ade2cebf7a110d819b'), money: 999 }
+]
+db1> db.d.find({money : {$lte : 999}});
+[
+  { _id: ObjectId('673251ade2cebf7a110d819a'), money: 120 },
+  { _id: ObjectId('673251ade2cebf7a110d819b'), money: 999 }
+]
+db1>
